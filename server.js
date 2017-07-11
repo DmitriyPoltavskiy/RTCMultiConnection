@@ -88,13 +88,16 @@ function serverHandler(request, response) {
             });
 
             if (filename.indexOf(resolveURL('/demos/MultiRTC/')) !== -1) {
+                console.log("11111");
                 filename = filename.replace(resolveURL('/demos/MultiRTC/'), '');
                 filename += resolveURL('/demos/MultiRTC/index.html');
             } else if (filename.indexOf(resolveURL('/demos/')) !== -1) {
+                console.log("22222");
                 filename = filename.replace(resolveURL('/demos/'), '');
-                filename += resolveURL('/demos/index.html');
+                filename += resolveURL('/index.html');
             } else {
-                filename += resolveURL('/demos/index.html');
+                console.log("33333");
+                filename += resolveURL('/index.html');
             }
         }
 
