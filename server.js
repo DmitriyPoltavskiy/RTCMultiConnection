@@ -1,5 +1,3 @@
-// Muaz Khan      - www.MuazKhan.com
-// MIT License    - www.WebRTC-Experiment.com/licence
 // Documentation  - github.com/muaz-khan/RTCMultiConnection
 
 function resolveURL(url) {
@@ -7,9 +5,6 @@ function resolveURL(url) {
     if (!isWin) return url;
     return url.replace(/\//g, '\\');
 }
-
-// Please use HTTPs on non-localhost domains.
-var isUseHTTPs = true;
 
 // var port = 443;
 var port = process.env.PORT || 9001;
@@ -43,7 +38,7 @@ try {
 
 // You don't need to change anything below
 
-var server = require(isUseHTTPs ? 'https' : 'http');
+var server = require('https');
 var url = require('url');
 
 function serverHandler(request, response) {
@@ -65,11 +60,20 @@ function serverHandler(request, response) {
         try {
             stats = fs.lstatSync(filename);
 
-            if (filename && filename.search(/demos/g) === -1 && stats.isDirectory()) {
+            if (filename && /* filename.search(/demos/g) === -1  &&*/ stats.isDirectory()) {
                 response.writeHead(200, {
                     'Content-Type': 'text/html'
                 });
-                response.write('<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0;url=/demos/"></head><body></body></html>');
+                response.write(`
+                    <!DOCTYPE html>
+                    <html>
+                        <head>
+                            <meta http-equiv="refresh" content="0;url=/demos/">
+                        </head>
+                        <body>
+                        </body>
+                    </html>
+                `);
                 response.end();
                 return;
             }
@@ -88,17 +92,16 @@ function serverHandler(request, response) {
             });
 
             if (filename.indexOf(resolveURL('/demos/MultiRTC/')) !== -1) {
-                console.log("11111");
                 filename = filename.replace(resolveURL('/demos/MultiRTC/'), '');
                 filename += resolveURL('/demos/MultiRTC/index.html');
             } else if (filename.indexOf(resolveURL('/demos/')) !== -1) {
-                console.log("22222");
                 filename = filename.replace(resolveURL('/demos/'), '');
                 filename += resolveURL('/index.html');
             } else {
-                console.log("33333");
                 filename += resolveURL('/index.html');
             }
+
+            console.log(filename);
         }
 
         var contentType = 'text/plain';
@@ -177,11 +180,11 @@ function serverHandler(request, response) {
 
 var app;
 
-if (isUseHTTPs) {
+// if (isUseHTTPs) {
     app = server.createServer(options, serverHandler);
-} else {
-    app = server.createServer(serverHandler);
-}
+// } else {
+//     app = server.createServer(serverHandler);
+// }
 
 function cmd_exec(cmd, args, cb_stdout, cb_end) {
     var spawn = require('child_process').spawn,
@@ -218,7 +221,7 @@ function runServer() {
                 e.address = 'localhost';
             }
 
-            var socketURL = (isUseHTTPs ? 'https' : 'http') + '://' + e.address + ':' + e.port + '/';
+            var socketURL = ('https') + '://' + e.address + ':' + e.port + '/';
 
             console.log('------------------------------');
             console.log('\x1b[31m%s\x1b[0m ', 'Unable to listen on port: ' + e.port);
@@ -245,7 +248,7 @@ function runServer() {
             addr.address = 'localhost';
         }
 
-        var domainURL = (isUseHTTPs ? 'https' : 'http') + '://' + addr.address + ':' + addr.port + '/';
+        var domainURL = ('https') + '://' + addr.address + ':' + addr.port + '/';
 
         console.log('------------------------------');
 
@@ -257,10 +260,10 @@ function runServer() {
         console.log('Your web-browser (HTML file) MUST set this line:');
         console.log('\x1b[31m%s\x1b[0m ', 'connection.socketURL = "' + domainURL + '";');
 
-        if (addr.address != 'localhost' && !isUseHTTPs) {
-            console.log('Warning:');
-            console.log('\x1b[31m%s\x1b[0m ', 'Please set isUseHTTPs=true to make sure audio,video and screen demos can work on Google Chrome as well.');
-        }
+        // if (addr.address != 'localhost' && !isUseHTTPs) {
+        //     console.log('Warning:');
+        //     console.log('\x1b[31m%s\x1b[0m ', 'Please set isUseHTTPs=true to make sure audio,video and screen demos can work on Google Chrome as well.');
+        // }
 
         console.log('------------------------------');
         console.log('Need help? http://bit.ly/2ff7QGk');

@@ -65,12 +65,15 @@ var chatContainer = document.querySelector('.chat-output');
 
 function appendDIV(event) {
     var div = document.createElement('div');
-    div.innerHTML = event.data || event;
+    div.className = 'chat-item right';
+    div.innerHTML = event.message || event.data || event;
     chatContainer.insertBefore(div, chatContainer.firstChild);
     div.tabIndex = 0;
     div.focus();
 
     document.getElementById('input-text-chat').focus();
+    
+    return div;
 }
 
 // ......................................................
@@ -126,7 +129,18 @@ connection.onstreamended = function(event) {
     }
 };
 
-connection.onmessage = appendDIV;
+// connection.onmessage = appendDIV;
+connection.onmessage = function (event) {
+    // console.log("1111111111111111        " + event.data);
+    // console.log("1111111111111111        " + event.message);
+    // console.log("1111111111111111        " + JSON.stringify(event));
+    // console.log("1111111111111111        " + JSON.parse(event));
+    appendDIV(event)
+        .className = "chat-item";
+
+};
+
+
 connection.filesContainer = document.getElementById('file-container');
 
 connection.onopen = function() {
